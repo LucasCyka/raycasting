@@ -33,8 +33,8 @@ int main(){
 		int playeriX           = playerPos.x;
 		int playeriY           = playerPos.y;
 		int drawIntersection   = 0;
-		float playerCellPosX   = (float) (playeriX/TILE_SIZE);
-		float playerCellPosY   = (float) (playeriY/TILE_SIZE);
+		float playerCellPosX   = (float) (playerPos.x/TILE_SIZE);
+		float playerCellPosY   = (float) (playerPos.y/TILE_SIZE);
 		Vector2 rayDir   = {0};
 		Vector2 intersectionPos = {0};
 
