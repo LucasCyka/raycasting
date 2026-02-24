@@ -3,6 +3,7 @@
 int *pcells;
 static int BoardWidth;
 static int BoardHeight;
+static Vector2 casterPos = {0.0f};
 
 void InitBoard(int width, int height){
 	BoardWidth  = width;
@@ -23,19 +24,20 @@ void DrawBoard(void){
 		for(int x = 0; x < BoardWidth; x++){
 			DrawRectangleLines(x*TILE_SIZE,y*TILE_SIZE,TILE_SIZE,TILE_SIZE,(Color){255,0,0,128});
 		}
-
 	}
-
+	//caster
+	DrawCircleV((Vector2){casterPos.x*TILE_SIZE,casterPos.y*TILE_SIZE},(float) (TILE_SIZE / 2.0f),WHITE);
 
 }
 
 void SetCasterPosition(Vector2 position){
-
+	casterPos = position;
 
 }
 void MoveCaster(Vector2 dir,float speed){
-
-
+	float dt = GetFrameTime();
+	casterPos.x += dir.x * speed * dt;
+	casterPos.y += dir.y * speed * dt;
 }
 
 void UpdateBoard(Vector2 coordinate, int value){
