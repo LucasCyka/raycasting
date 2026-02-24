@@ -13,15 +13,15 @@ static Vector2 gridSize = {GRID_COLUMNS * TILE_SIZE, GRID_ROWS * TILE_SIZE};
 
 Vector2 getGridPosition(Vector2 _windowPosition){
 	Vector2 worldMousePos;
-	worldMousePos.x = (float)((_windowPosition.x - (WINDOW_WIDTH - gridSize.x*boardScale)*0.5f)/boardScale);
-	worldMousePos.y = (float)((_windowPosition.y - (WINDOW_HEIGHT - gridSize.y*boardScale)*0.5f)/boardScale);
+	worldMousePos.x = (float)((_windowPosition.x - (WINDOW_WIDTH - gridSize.x*boardScale)*0.5f)/boardScale) / TILE_SIZE;
+	worldMousePos.y = (float)((_windowPosition.y - (WINDOW_HEIGHT - gridSize.y*boardScale)*0.5f)/boardScale)/ TILE_SIZE;
 	
 	//clamp
-	worldMousePos.x = (worldMousePos.x > gridSize.x) ? gridSize.x : worldMousePos.x;	
+	worldMousePos.x = (worldMousePos.x > GRID_COLUMNS) ? GRID_COLUMNS : worldMousePos.x;	
 	worldMousePos.x = (worldMousePos.x < 0.00f) ? 0.00f : worldMousePos.x;	
 	
-	worldMousePos.y = (worldMousePos.y > gridSize.y) ? gridSize.x : worldMousePos.x;		
-	worldMousePos.y = (worldMousePos.y < 0.00f) ? 0.00f : worldMousePos.x;	
+	worldMousePos.y = (worldMousePos.y > GRID_ROWS) ? GRID_ROWS : worldMousePos.y;		
+	worldMousePos.y = (worldMousePos.y < 0.00f) ? 0.00f : worldMousePos.y;	
 
 	return worldMousePos;
 }
@@ -37,7 +37,6 @@ int main() {
 	SetTargetFPS(30);
 
 	InitBoard(GRID_COLUMNS, GRID_ROWS);
-	UpdateBoard((Vector2) {0,0},1); //TODO: read from a file
 	SetCasterPosition((Vector2) {GRID_COLUMNS / 2.0, GRID_ROWS / 2.0});
 	MoveCaster((Vector2){1.0,1.0},100.00f);	
 	
@@ -52,6 +51,8 @@ int main() {
 		if(IsKeyDown(KEY_W)) playerDir.y -= 1.00f;	
 		if(IsKeyDown(KEY_S)) playerDir.y += 1.00f;	
 		
+		if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) UpdateBoard(getGridPosition(GetMousePosition()),1);	
+
 		MoveCaster(playerDir,PLAYER_SPEED);
 
 		BeginTextureMode(frameBufferRender);
@@ -60,7 +61,6 @@ int main() {
 		
 		EndTextureMode();
 		
-
 		BeginDrawing();
 			ClearBackground(BLACK);
 			

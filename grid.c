@@ -23,6 +23,8 @@ void DrawBoard(void){
 	
 		for(int x = 0; x < BoardWidth; x++){
 			DrawRectangleLines(x*TILE_SIZE,y*TILE_SIZE,TILE_SIZE,TILE_SIZE,(Color){255,0,0,128});
+
+			if (pcells[y * BoardWidth + x] == 1) DrawRectangle(x*TILE_SIZE, y*TILE_SIZE, TILE_SIZE, TILE_SIZE, YELLOW);
 		}
 	}
 	//caster
@@ -40,8 +42,10 @@ void MoveCaster(Vector2 dir,float speed){
 	casterPos.y += dir.y * speed * dt;
 }
 
-void UpdateBoard(Vector2 coordinate, int value){
-
+void UpdateBoard(Vector2 coordinates, int value){
+	int x = coordinates.x;
+	int y = coordinates.y;
+	pcells[(int)(y * BoardWidth + x)] = value;
 
 }
 

@@ -10,7 +10,7 @@
 void InitBoard(int width, int height);
 void SetCasterPosition(Vector2 position);
 void MoveCaster(Vector2 dir,float speed);
-void UpdateBoard(Vector2 coordinate, int value);
+void UpdateBoard(Vector2 coordinates, int value);
 void DrawBoard(void);
 void FreeBoard(void);
 Vector2 CastRay(Vector2 dir);
