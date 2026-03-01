@@ -4,6 +4,11 @@ int *pcells;
 static int BoardWidth;
 static int BoardHeight;
 static Vector2 casterPos = {0.0f};
+static Vector2 casterDir = {-1.00f, 0.00f};
+//camera plane is actually 2*0.66 = 1.32, but is centered at zero between 1 and -1
+//FOV will be 2*atan(0.66/1.0) (plane size/casterDir)
+//must always be perpendicular to casterDir
+static Vector2 cameraPlane = {0,0.66};
 
 void InitBoard(int width, int height){
 	BoardWidth  = width;
@@ -28,18 +33,34 @@ void DrawBoard(void){
 		}
 	}
 	//caster
-	DrawCircleV((Vector2){casterPos.x*TILE_SIZE,casterPos.y*TILE_SIZE},(float) (TILE_SIZE / 2.0f),WHITE);
-
+	DrawCircleV((Vector2){casterPos.x*TILE_SIZE,casterPos.y*TILE_SIZE},(float) (TILE_SIZE / 4.0f),WHITE);
+	DrawLineV(Vector2Scale(casterPos,TILE_SIZE), Vector2Add(Vector2Scale(casterPos,TILE_SIZE), Vector2Scale(casterDir,TILE_SIZE*2)), GREEN);
 }
 
 void SetCasterPosition(Vector2 position){
 	casterPos = position;
 
 }
-void MoveCaster(Vector2 dir,float speed){
+void MoveCaster(Vector2 dir,float speed, float angularSpeed){
 	float dt = GetFrameTime();
-	casterPos.x += dir.x * speed * dt;
-	casterPos.y += dir.y * speed * dt;
+	//casterPos.x += dir.x * speed * dt;
+	//casterPos.y += dir.y * speed * dt;
+	
+	if(dir.x > 0.1f){
+		casterDir.x = casterDir.x*cosf(PI/180.0f*angularSpeed) - casterDir.y*sinf(PI/180.0f*angularSpeed);
+		casterDir.y = casterDir.x*sinf(PI/180.0f*angularSpeed) + casterDir.y*cosf(PI/180.0f*angularSpeed);
+		casterDir   = Vector2Normalize(casterDir);
+	}else if(dir.x < -0.1f){
+		casterDir.x = casterDir.x*cosf(PI/180.0f*-angularSpeed) - casterDir.y*sinf(PI/180.0f*-angularSpeed);
+		casterDir.y = casterDir.x*sinf(PI/180.0f*-angularSpeed) + casterDir.y*cosf(PI/180.0f*-angularSpeed);
+		casterDir   = Vector2Normalize(casterDir);
+	}
+	
+	if(dir.y < -0.1f) {
+		casterPos.y += casterDir.y * speed * dt;
+		casterPos.x += casterDir.x * speed * dt;
+	}
+
 }
 
 void UpdateBoard(Vector2 coordinates, int value){

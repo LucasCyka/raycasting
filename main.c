@@ -1,8 +1,9 @@
-#define WINDOW_WIDTH  800
-#define WINDOW_HEIGHT 460
-#define GRID_COLUMNS  10
-#define GRID_ROWS     10
-#define PLAYER_SPEED  5.00f
+#define WINDOW_WIDTH     800
+#define WINDOW_HEIGHT    460
+#define GRID_COLUMNS     20
+#define GRID_ROWS        10
+#define PLAYER_SPEED     5.00f
+#define ANGULAR_SPEED    5.00f
 
 #include<raylib.h>
 #include "grid.h"
@@ -27,18 +28,17 @@ Vector2 getGridPosition(Vector2 _windowPosition){
 }
 
 int main() {
-	
 	float widthScale  = (float) (WINDOW_WIDTH  / gridSize.x);
 	float heightScale = (float) (WINDOW_HEIGHT / gridSize.y);
 
 	boardScale = (widthScale < heightScale) ? widthScale : heightScale; 
 	//SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raycasting");
-	SetTargetFPS(30);
+	SetTargetFPS(60);
 
 	InitBoard(GRID_COLUMNS, GRID_ROWS);
 	SetCasterPosition((Vector2) {GRID_COLUMNS / 2.0, GRID_ROWS / 2.0});
-	MoveCaster((Vector2){1.0,1.0},100.00f);	
+	//MoveCaster((Vector2){1.0,1.0},100.00f);	
 	
 	frameBufferRender = LoadRenderTexture(GRID_COLUMNS * TILE_SIZE, GRID_ROWS * TILE_SIZE);
 	SetTextureFilter(frameBufferRender.texture,TEXTURE_FILTER_BILINEAR);	
@@ -53,7 +53,7 @@ int main() {
 		
 		if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) UpdateBoard(getGridPosition(GetMousePosition()),1);	
 
-		MoveCaster(playerDir,PLAYER_SPEED);
+		MoveCaster(playerDir,PLAYER_SPEED,ANGULAR_SPEED);
 
 		BeginTextureMode(frameBufferRender);
 			ClearBackground(BLACK);
