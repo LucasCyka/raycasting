@@ -5,7 +5,9 @@
 #define PLAYER_SPEED     5.00f
 #define ANGULAR_SPEED    5.00f
 
-#include<raylib.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <raylib.h>
 #include "grid.h"
 
 RenderTexture2D frameBufferRender;
@@ -30,6 +32,7 @@ Vector2 getGridPosition(Vector2 _windowPosition){
 int main() {
 	float widthScale  = (float) (WINDOW_WIDTH  / gridSize.x);
 	float heightScale = (float) (WINDOW_HEIGHT / gridSize.y);
+	bool drawMap	  = false;
 
 	boardScale = (widthScale < heightScale) ? widthScale : heightScale; 
 	//SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -46,10 +49,12 @@ int main() {
 	while(!WindowShouldClose()){
 		Vector2 intersection = CastRay((Vector2){0.0f,0.0f});		
 		Vector2 playerDir    = (Vector2) {0.0f};
+
 		if(IsKeyDown(KEY_A)) playerDir.x -= 1.00f;	
 		if(IsKeyDown(KEY_D)) playerDir.x += 1.00f;	
 		if(IsKeyDown(KEY_W)) playerDir.y -= 1.00f;	
 		if(IsKeyDown(KEY_S)) playerDir.y += 1.00f;	
+		if(IsKeyPressed(KEY_M)) drawMap = !drawMap;
 		
 		if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) UpdateBoard(getGridPosition(GetMousePosition()),1);	
 
@@ -70,7 +75,7 @@ int main() {
 			 (float)(gridSize.x * boardScale),  
 			 (float)(gridSize.y * boardScale) };
 			
-			DrawTexturePro(frameBufferRender.texture, sourceRect, destRect, (Vector2){0.0f,0.0f}, 0.0f, WHITE); 
+			if(drawMap) DrawTexturePro(frameBufferRender.texture, sourceRect, destRect, (Vector2){0.0f,0.0f}, 0.0f, WHITE); 
 			
 			Vector2 mousePos = GetMousePosition();
 			Vector2 tilePos  = getGridPosition(mousePos);
