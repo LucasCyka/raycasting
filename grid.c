@@ -35,6 +35,8 @@ void DrawBoard(void){
 	//caster
 	DrawCircleV((Vector2){casterPos.x*TILE_SIZE,casterPos.y*TILE_SIZE},(float) (TILE_SIZE / 4.0f),WHITE);
 	DrawLineV(Vector2Scale(casterPos,TILE_SIZE), Vector2Add(Vector2Scale(casterPos,TILE_SIZE), Vector2Scale(casterDir,TILE_SIZE*2)), GREEN);
+	
+	DrawText(TextFormat("(%.2f,%.2f)",cameraPlane.x,cameraPlane.y),0,0,2,WHITE);
 }
 
 void SetCasterPosition(Vector2 position){
@@ -43,17 +45,23 @@ void SetCasterPosition(Vector2 position){
 }
 void MoveCaster(Vector2 dir,float speed, float angularSpeed){
 	float dt = GetFrameTime();
-	//casterPos.x += dir.x * speed * dt;
-	//casterPos.y += dir.y * speed * dt;
-	
+	Vector2 bdir = casterDir;
+	Vector2 cdir = cameraPlane;	
+
 	if(dir.x > 0.1f){
-		casterDir.x = casterDir.x*cosf(PI/180.0f*angularSpeed) - casterDir.y*sinf(PI/180.0f*angularSpeed);
-		casterDir.y = casterDir.x*sinf(PI/180.0f*angularSpeed) + casterDir.y*cosf(PI/180.0f*angularSpeed);
+		casterDir.x = bdir.x*cosf(PI/180.0f*angularSpeed) - bdir.y*sinf(PI/180.0f*angularSpeed);
+		casterDir.y = bdir.x*sinf(PI/180.0f*angularSpeed) + bdir.y*cosf(PI/180.0f*angularSpeed);
 		casterDir   = Vector2Normalize(casterDir);
+
+		cameraPlane.x = cdir.x*cosf(PI/180.0f*angularSpeed) - cdir.y*sinf(PI/180.0f*angularSpeed);
+		cameraPlane.y = cdir.x*sinf(PI/180.0f*angularSpeed) + cdir.y*cosf(PI/180.0f*angularSpeed);
 	}else if(dir.x < -0.1f){
-		casterDir.x = casterDir.x*cosf(PI/180.0f*-angularSpeed) - casterDir.y*sinf(PI/180.0f*-angularSpeed);
-		casterDir.y = casterDir.x*sinf(PI/180.0f*-angularSpeed) + casterDir.y*cosf(PI/180.0f*-angularSpeed);
+		casterDir.x = bdir.x*cosf(PI/180.0f*-angularSpeed) - bdir.y*sinf(PI/180.0f*-angularSpeed);
+		casterDir.y = bdir.x*sinf(PI/180.0f*-angularSpeed) + bdir.y*cosf(PI/180.0f*-angularSpeed);
 		casterDir   = Vector2Normalize(casterDir);
+
+		cameraPlane.x = cdir.x*cosf(PI/180.0f*-angularSpeed) - cdir.y*sinf(PI/180.0f*-angularSpeed);
+		cameraPlane.y = cdir.x*sinf(PI/180.0f*-angularSpeed) + cdir.y*cosf(PI/180.0f*-angularSpeed);
 	}
 	
 	if(dir.y < -0.1f) {
