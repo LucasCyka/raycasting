@@ -32,7 +32,7 @@ Vector2 getGridPosition(Vector2 _windowPosition){
 int main() {
 	float widthScale  = (float) (WINDOW_WIDTH  / gridSize.x);
 	float heightScale = (float) (WINDOW_HEIGHT / gridSize.y);
-	bool drawMap	  = false;
+	bool drawMap	  = true;
 
 	boardScale = (widthScale < heightScale) ? widthScale : heightScale; 
 	//SetConfigFlags(FLAG_WINDOW_RESIZABLE);
@@ -70,15 +70,17 @@ int main() {
 		BeginDrawing();
 			ClearBackground(BLACK);
 			
-			for(int w = 0; w < WINDOW_WIDTH; w++){
-				if(scr[w] == 0) continue;
-				int startColumn = -scr[w] / 2 + WINDOW_HEIGHT / 2;
-				int endColumn   = scr[w] / 2 + WINDOW_HEIGHT / 2;
+			if(!drawMap){
+				for(int w = 0; w < WINDOW_WIDTH; w++){
+					if(scr[w] == 0) continue;
+						int startColumn = -scr[w] / 2 + WINDOW_HEIGHT / 2;
+						int endColumn   = scr[w] / 2 + WINDOW_HEIGHT / 2;
 				
-				if (startColumn < 0) startColumn = 0;
-				if (endColumn   > WINDOW_HEIGHT) endColumn = WINDOW_HEIGHT;				
+						if (startColumn < 0) startColumn = 0;
+						if (endColumn   > WINDOW_HEIGHT) endColumn = WINDOW_HEIGHT;				
 
-				DrawLine(w, startColumn, w, endColumn, RED);
+						DrawLine(w, startColumn, w, endColumn, RED);
+					}
 			}
 
 			Rectangle sourceRect = {0.0f, 0.0f, frameBufferRender.texture.width,-frameBufferRender.texture.height};

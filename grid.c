@@ -100,7 +100,7 @@ int *CastToBuffer(){
 		float xNormalized = (float) (x/(ScreenWidth/2.00f) - 1.00f);
 		
 		rayDir = Vector2Add(casterDir, Vector2Scale(cameraPlane,  xNormalized));
-		rayDir = Vector2Normalize(rayDir);
+		//rayDir = Vector2Normalize(rayDir);
 		//rays[x] = rayDir;
 		
 		//rayDir.x += 0.0000000000000001f;
@@ -108,7 +108,7 @@ int *CastToBuffer(){
 
 		Vector2 rayStepping = { sqrtf(1.00f + (rayDir.y/rayDir.x) * (rayDir.y/rayDir.x)),
 		sqrtf(1.00f + (rayDir.x/rayDir.y) * (rayDir.x/rayDir.y))};
-	
+		
 		if(rayDir.x > 0){
 			step.x      = 1.00f;
 			rayLenght.x = (float)(casterMapX + 1.00f - casterPos.x) * rayStepping.x; 
@@ -150,7 +150,8 @@ int *CastToBuffer(){
 			}
 		}	
 		
-		rays[x] = Vector2Add(Vector2Scale(rayDir, travelledDistance),  casterPos);
+		rays[x] = Vector2Add(Vector2Scale(Vector2Normalize(rayDir), travelledDistance),  casterPos);
+		
 		if(!found) screenBuffer[x] =  0;
 		else{
 			float hDist = 1.00f;
