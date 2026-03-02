@@ -39,7 +39,7 @@ int main() {
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raycasting");
 	SetTargetFPS(60);
 
-	InitBoard(GRID_COLUMNS, GRID_ROWS,WINDOW_WIDTH);
+	InitBoard(GRID_COLUMNS, GRID_ROWS,WINDOW_WIDTH,WINDOW_HEIGHT);
 	SetCasterPosition((Vector2) {GRID_COLUMNS / 2.0, GRID_ROWS / 2.0});
 	//MoveCaster((Vector2){1.0,1.0},100.00f);	
 	
@@ -70,6 +70,17 @@ int main() {
 		BeginDrawing();
 			ClearBackground(BLACK);
 			
+			for(int w = 0; w < WINDOW_WIDTH; w++){
+				if(scr[w] == 0) continue;
+				int startColumn = -scr[w] / 2 + WINDOW_HEIGHT / 2;
+				int endColumn   = scr[w] / 2 + WINDOW_HEIGHT / 2;
+				
+				if (startColumn < 0) startColumn = 0;
+				if (endColumn   > WINDOW_HEIGHT) endColumn = WINDOW_HEIGHT;				
+
+				DrawLine(w, startColumn, w, endColumn, RED);
+			}
+
 			Rectangle sourceRect = {0.0f, 0.0f, frameBufferRender.texture.width,-frameBufferRender.texture.height};
 			Rectangle destRect   = {(float)((WINDOW_WIDTH - gridSize.x* boardScale)*0.5), 
 			 (float)((WINDOW_HEIGHT - gridSize.y * boardScale)*0.5),

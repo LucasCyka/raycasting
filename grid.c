@@ -7,6 +7,8 @@ Vector2 *rays;
 static int BoardWidth;
 static int BoardHeight;
 static int ScreenWidth;
+static int ScreenHeight;
+
 static Vector2 casterPos = {0.0f};
 static Vector2 casterDir = {-1.00f, 0.00f};
 //camera plane is actually 2*0.66 = 1.32, but is centered at zero between 1 and -1
@@ -14,10 +16,11 @@ static Vector2 casterDir = {-1.00f, 0.00f};
 //must always be perpendicular to casterDir
 static Vector2 cameraPlane = {0,0.66};
 
-void InitBoard(int width, int height, int screenWidth){
-	BoardWidth  = width;
-	BoardHeight = height; 	
-	ScreenWidth = screenWidth;
+void InitBoard(int width, int height, int screenWidth, int screenHeight){
+	BoardWidth   = width;
+	BoardHeight  = height; 	
+	ScreenWidth  = screenWidth;
+	ScreenHeight = screenHeight;
 
 	int cells_size = width * height;
 	pcells = (int*) malloc(cells_size * sizeof(int)); 
@@ -125,19 +128,22 @@ int *CastToBuffer(){
 		bool found   = false;
 		float maxDis = 100.00f;
 		float travelledDistance = 0.00f;
+		int   hitSide = 0; //0 = x, 1 = y
 		while(!found && travelledDistance < maxDis){
 
 			if(rayLenght.x < rayLenght.y){
 				casterMapX += step.x;
 				travelledDistance = rayLenght.x;
 				rayLenght.x += rayStepping.x;
+				hitSide = 0;
 			}else{
 				casterMapY += step.y;
 				travelledDistance = rayLenght.y;
 				rayLenght.y += rayStepping.y;
+				hitSide = 1;
 			}
 			int id = (int)(casterMapY * BoardWidth + casterMapX);
-			if(id < BoardWidth*BoardHeight){
+			if(casterMapX >=0 && casterMapX <= BoardWidth && casterMapY >= 0 && casterMapY <= BoardHeight  ){
 				if(pcells[id] == 1){
 					found = true;
 				}
@@ -145,16 +151,22 @@ int *CastToBuffer(){
 		}	
 		
 		rays[x] = Vector2Add(Vector2Scale(rayDir, travelledDistance),  casterPos);
-		
+		if(!found) screenBuffer[x] =  0;
+		else{
+			float hDist = 1.00f;
+			float distanceToPlane = 1.00f;
+			if (hitSide == 0){
+				hDist = (float)(casterMapX + ((step.x -1.00f) / 2.00f) - casterPos.x);
+				distanceToPlane = hDist/rayDir.x;
+			}else{
+				hDist = (float)(casterMapY + ((step.y -1.00f) / 2.00f) - casterPos.y);
+				distanceToPlane = hDist/rayDir.y;
+			}
+			
+			int lineHeight  = ScreenHeight / distanceToPlane;
+			screenBuffer[x] = lineHeight;
+		}
 	}	
-
-
-
-
-
-
-	
-
 
 	return screenBuffer;
 }

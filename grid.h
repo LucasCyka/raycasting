@@ -10,7 +10,7 @@
 #include <math.h>
 #include <raymath.h>
 
-void InitBoard(int width, int height, int screenWidth);
+void InitBoard(int width, int height, int screenWidth, int screenHeight);
 void SetCasterPosition(Vector2 position);
 void MoveCaster(Vector2 dir,float speed,float angularSpeed);
 void UpdateBoard(Vector2 coordinates, int value);
