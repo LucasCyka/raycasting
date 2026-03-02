@@ -50,8 +50,8 @@ int main() {
 		//Vector2 intersection = CastRay((Vector2){0.0f,0.0f});		
 		Vector2 playerDir    = (Vector2) {0.0f};
 
-		if(IsKeyDown(KEY_A)) playerDir.x -= 1.00f;	
-		if(IsKeyDown(KEY_D)) playerDir.x += 1.00f;	
+		if(IsKeyDown(KEY_D)) playerDir.x -= 1.00f;	
+		if(IsKeyDown(KEY_A)) playerDir.x += 1.00f;	
 		if(IsKeyDown(KEY_W)) playerDir.y -= 1.00f;	
 		if(IsKeyDown(KEY_S)) playerDir.y += 1.00f;	
 		if(IsKeyPressed(KEY_M)) drawMap = !drawMap;

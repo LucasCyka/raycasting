@@ -156,10 +156,10 @@ int *CastToBuffer(){
 			float hDist = 1.00f;
 			float distanceToPlane = 1.00f;
 			if (hitSide == 0){
-				hDist = (float)(casterMapX + ((step.x -1.00f) / 2.00f) - casterPos.x);
+				hDist = (float)(casterMapX + ((step.x -1.00f) / -2.00f) - casterPos.x);
 				distanceToPlane = hDist/rayDir.x;
 			}else{
-				hDist = (float)(casterMapY + ((step.y -1.00f) / 2.00f) - casterPos.y);
+				hDist = (float)(casterMapY + ((step.y -1.00f) / -2.00f) - casterPos.y);
 				distanceToPlane = hDist/rayDir.y;
 			}
 			
