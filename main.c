@@ -39,7 +39,7 @@ int main() {
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raycasting");
 	SetTargetFPS(60);
 
-	InitBoard(GRID_COLUMNS, GRID_ROWS);
+	InitBoard(GRID_COLUMNS, GRID_ROWS,WINDOW_WIDTH);
 	SetCasterPosition((Vector2) {GRID_COLUMNS / 2.0, GRID_ROWS / 2.0});
 	//MoveCaster((Vector2){1.0,1.0},100.00f);	
 	
@@ -47,7 +47,7 @@ int main() {
 	SetTextureFilter(frameBufferRender.texture,TEXTURE_FILTER_BILINEAR);	
 
 	while(!WindowShouldClose()){
-		Vector2 intersection = CastRay((Vector2){0.0f,0.0f});		
+		//Vector2 intersection = CastRay((Vector2){0.0f,0.0f});		
 		Vector2 playerDir    = (Vector2) {0.0f};
 
 		if(IsKeyDown(KEY_A)) playerDir.x -= 1.00f;	
@@ -59,11 +59,12 @@ int main() {
 		if(IsMouseButtonDown(MOUSE_BUTTON_RIGHT)) UpdateBoard(getGridPosition(GetMousePosition()),1);	
 
 		MoveCaster(playerDir,PLAYER_SPEED,ANGULAR_SPEED);
-
+		
+		int *scr = CastToBuffer();
+	
 		BeginTextureMode(frameBufferRender);
 			ClearBackground(BLACK);
 			DrawBoard();
-		
 		EndTextureMode();
 		
 		BeginDrawing();

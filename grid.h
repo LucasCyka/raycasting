@@ -6,15 +6,16 @@
 #include <raylib.h>
 #include <memory.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <math.h>
 #include <raymath.h>
 
-void InitBoard(int width, int height);
+void InitBoard(int width, int height, int screenWidth);
 void SetCasterPosition(Vector2 position);
 void MoveCaster(Vector2 dir,float speed,float angularSpeed);
 void UpdateBoard(Vector2 coordinates, int value);
 void DrawBoard(void);
 void FreeBoard(void);
-Vector2 CastRay(Vector2 dir);
+int *CastToBuffer();
 
 #endif 

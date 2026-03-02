@@ -1,8 +1,12 @@
 #include "grid.h"
 
 int *pcells;
+int *screenBuffer;
+Vector2 *rays;
+
 static int BoardWidth;
 static int BoardHeight;
+static int ScreenWidth;
 static Vector2 casterPos = {0.0f};
 static Vector2 casterDir = {-1.00f, 0.00f};
 //camera plane is actually 2*0.66 = 1.32, but is centered at zero between 1 and -1
@@ -10,17 +14,19 @@ static Vector2 casterDir = {-1.00f, 0.00f};
 //must always be perpendicular to casterDir
 static Vector2 cameraPlane = {0,0.66};
 
-void InitBoard(int width, int height){
+void InitBoard(int width, int height, int screenWidth){
 	BoardWidth  = width;
 	BoardHeight = height; 	
+	ScreenWidth = screenWidth;
 
 	int cells_size = width * height;
 	pcells = (int*) malloc(cells_size * sizeof(int)); 
 	
 	for (int id = 0; id < cells_size; id++){
 		pcells[id] = 0;
-	}	
-
+	}
+	screenBuffer = (int*) malloc(screenWidth * sizeof(int));	
+	rays         = (Vector2*) malloc(screenWidth * sizeof(Vector2));
 }
 
 void DrawBoard(void){
@@ -35,8 +41,11 @@ void DrawBoard(void){
 	//caster
 	DrawCircleV((Vector2){casterPos.x*TILE_SIZE,casterPos.y*TILE_SIZE},(float) (TILE_SIZE / 4.0f),WHITE);
 	DrawLineV(Vector2Scale(casterPos,TILE_SIZE), Vector2Add(Vector2Scale(casterPos,TILE_SIZE), Vector2Scale(casterDir,TILE_SIZE*2)), GREEN);
-	
-	DrawText(TextFormat("(%.2f,%.2f)",cameraPlane.x,cameraPlane.y),0,0,2,WHITE);
+	for(int i = 0; i < ScreenWidth; i++) {
+		DrawLineV(Vector2Scale(casterPos,TILE_SIZE), Vector2Scale(rays[i], TILE_SIZE ) , PURPLE);
+	}
+	//DrawText(TextFormat("(%.2f,%.2f)",cameraPlane.x,cameraPlane.y),0,0,2,WHITE);
+		
 }
 
 void SetCasterPosition(Vector2 position){
@@ -78,13 +87,80 @@ void UpdateBoard(Vector2 coordinates, int value){
 
 }
 
+int *CastToBuffer(){
+	for(int x = 0; x < ScreenWidth; x++){
+		Vector2 rayDir    = casterDir;
+		Vector2 step      = {0.00f};
+		Vector2 rayLenght = {0.00f};
+		int casterMapX    = casterPos.x;
+		int casterMapY    = casterPos.y;
+		float xNormalized = (float) (x/(ScreenWidth/2.00f) - 1.00f);
+		
+		rayDir = Vector2Add(casterDir, Vector2Scale(cameraPlane,  xNormalized));
+		rayDir = Vector2Normalize(rayDir);
+		//rays[x] = rayDir;
+		
+		//rayDir.x += 0.0000000000000001f;
+		//rayDir.y +=	0.0000000000000001f;	
 
-Vector2 CastRay(Vector2 dir){
+		Vector2 rayStepping = { sqrtf(1.00f + (rayDir.y/rayDir.x) * (rayDir.y/rayDir.x)),
+		sqrtf(1.00f + (rayDir.x/rayDir.y) * (rayDir.x/rayDir.y))};
+	
+		if(rayDir.x > 0){
+			step.x      = 1.00f;
+			rayLenght.x = (float)(casterMapX + 1.00f - casterPos.x) * rayStepping.x; 
+		}else if(rayDir.x < 0){
+			step.x      = -1.00f;
+			rayLenght.x = (float)(casterPos.x - casterMapX) * rayStepping.x;
+		}
+
+		if(rayDir.y > 0){
+			step.y      = 1.00f;
+			rayLenght.y = (float)(casterMapY + 1.00f - casterPos.y) * rayStepping.y; 
+		}else if(rayDir.y < 0){
+			step.y      = -1.00f;
+			rayLenght.y = (float)(casterPos.y - casterMapY) * rayStepping.y;
+		}
+		
+		bool found   = false;
+		float maxDis = 100.00f;
+		float travelledDistance = 0.00f;
+		while(!found && travelledDistance < maxDis){
+
+			if(rayLenght.x < rayLenght.y){
+				casterMapX += step.x;
+				travelledDistance = rayLenght.x;
+				rayLenght.x += rayStepping.x;
+			}else{
+				casterMapY += step.y;
+				travelledDistance = rayLenght.y;
+				rayLenght.y += rayStepping.y;
+			}
+			int id = (int)(casterMapY * BoardWidth + casterMapX);
+			if(id < BoardWidth*BoardHeight){
+				if(pcells[id] == 1){
+					found = true;
+				}
+			}
+		}	
+		
+		rays[x] = Vector2Add(Vector2Scale(rayDir, travelledDistance),  casterPos);
+		
+	}	
 
 
+
+
+
+
+	
+
+
+	return screenBuffer;
 }
-
 
 void FreeBoard(){
 	free(pcells);
+	free(screenBuffer);
+	free(rays);
 }
