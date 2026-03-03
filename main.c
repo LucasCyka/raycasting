@@ -50,8 +50,8 @@ int main() {
 		//Vector2 intersection = CastRay((Vector2){0.0f,0.0f});		
 		Vector2 playerDir    = (Vector2) {0.0f};
 
-		if(IsKeyDown(KEY_D)) playerDir.x -= 1.00f;	
-		if(IsKeyDown(KEY_A)) playerDir.x += 1.00f;	
+		if(IsKeyDown(KEY_A)) playerDir.x -= 1.00f;	
+		if(IsKeyDown(KEY_D)) playerDir.x += 1.00f;	
 		if(IsKeyDown(KEY_W)) playerDir.y -= 1.00f;	
 		if(IsKeyDown(KEY_S)) playerDir.y += 1.00f;	
 		if(IsKeyPressed(KEY_M)) drawMap = !drawMap;
@@ -60,7 +60,7 @@ int main() {
 
 		MoveCaster(playerDir,PLAYER_SPEED,ANGULAR_SPEED);
 		
-		int *scr = CastToBuffer();
+		ScreenBuffer scr = CastToBuffer();
 	
 		BeginTextureMode(frameBufferRender);
 			ClearBackground(BLACK);
@@ -72,14 +72,14 @@ int main() {
 			
 			if(!drawMap){
 				for(int w = 0; w < WINDOW_WIDTH; w++){
-					if(scr[w] == 0) continue;
-						int startColumn = -scr[w] / 2 + WINDOW_HEIGHT / 2;
-						int endColumn   = scr[w] / 2 + WINDOW_HEIGHT / 2;
+					if(scr.lines[w] == 0) continue;
+						int startColumn = -scr.lines[w] / 2 + WINDOW_HEIGHT / 2;
+						int endColumn   = scr.lines[w] / 2 + WINDOW_HEIGHT / 2;
 				
 						if (startColumn < 0) startColumn = 0;
 						if (endColumn   > WINDOW_HEIGHT) endColumn = WINDOW_HEIGHT;				
 
-						DrawLine(w, startColumn, w, endColumn, RED);
+						DrawLine(w, startColumn, w, endColumn, GetColor(scr.colors[w]));
 					}
 			}
 

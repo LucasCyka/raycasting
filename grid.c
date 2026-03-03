@@ -1,7 +1,7 @@
 #include "grid.h"
 
 int *pcells;
-int *screenBuffer;
+//int *screenBuffer;
 Vector2 *rays;
 
 static int BoardWidth;
@@ -16,6 +16,8 @@ static Vector2 casterDir = {-1.00f, 0.00f};
 //must always be perpendicular to casterDir
 static Vector2 cameraPlane = {0,0.66};
 
+ScreenBuffer buff;
+
 void InitBoard(int width, int height, int screenWidth, int screenHeight){
 	BoardWidth   = width;
 	BoardHeight  = height; 	
@@ -28,7 +30,11 @@ void InitBoard(int width, int height, int screenWidth, int screenHeight){
 	for (int id = 0; id < cells_size; id++){
 		pcells[id] = 0;
 	}
-	screenBuffer = (int*) malloc(screenWidth * sizeof(int));	
+	
+	buff.lines  = (int*) malloc(screenWidth * sizeof(int));	
+	buff.colors = (int*) malloc(screenWidth * sizeof(int));		
+
+	//screenBuffer = (int*) malloc(screenWidth * sizeof(int));	
 	rays         = (Vector2*) malloc(screenWidth * sizeof(Vector2));
 }
 
@@ -90,14 +96,15 @@ void UpdateBoard(Vector2 coordinates, int value){
 
 }
 
-int *CastToBuffer(){
+ScreenBuffer CastToBuffer(){
 	for(int x = 0; x < ScreenWidth; x++){
 		Vector2 rayDir    = casterDir;
 		Vector2 step      = {0.00f};
 		Vector2 rayLenght = {0.00f};
 		int casterMapX    = casterPos.x;
 		int casterMapY    = casterPos.y;
-		float xNormalized = (float) (x/(ScreenWidth/2.00f) - 1.00f);
+		//float xNormalized = (float) (x/(ScreenWidth/2.00f) - 1.00f); //inverted duur
+		float xNormalized = (float) (x/(ScreenWidth/-2.00f) + 1.00f);
 		
 		rayDir = Vector2Add(casterDir, Vector2Scale(cameraPlane,  xNormalized));
 		//rayDir = Vector2Normalize(rayDir);
@@ -152,7 +159,7 @@ int *CastToBuffer(){
 		
 		rays[x] = Vector2Add(Vector2Scale(Vector2Normalize(rayDir), travelledDistance),  casterPos);
 		
-		if(!found) screenBuffer[x] =  0;
+		if(!found) buff.lines[x] =  0;
 		else{
 			float hDist = 1.00f;
 			float distanceToPlane = 1.00f;
@@ -165,15 +172,19 @@ int *CastToBuffer(){
 			}
 			
 			int lineHeight  = ScreenHeight / distanceToPlane;
-			screenBuffer[x] = lineHeight;
+			buff.lines[x]   = lineHeight;
+			buff.colors[x]  = 0xFF0000FF;
+			if(hitSide == 0) buff.colors[x] -= 0xAA;
 		}
 	}	
 
-	return screenBuffer;
+	return buff;
 }
 
 void FreeBoard(){
 	free(pcells);
-	free(screenBuffer);
+	//free(screenBuffer);
 	free(rays);
+	free(buff.colors);
+	free(buff.lines);
 }
