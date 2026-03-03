@@ -85,6 +85,10 @@ void MoveCaster(Vector2 dir,float speed, float angularSpeed){
 	if(dir.y < -0.1f) {
 		casterPos.y += casterDir.y * speed * dt;
 		casterPos.x += casterDir.x * speed * dt;
+	}else if(dir.y >0.1f){
+		casterPos.y += -casterDir.y * speed * dt;
+		casterPos.x += -casterDir.x * speed * dt;
+	}else if(dir.y >0.1f){
 	}
 
 }
