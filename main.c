@@ -13,11 +13,12 @@
 RenderTexture2D frameBufferRender;
 static float boardScale = 1.0f;
 static Vector2 gridSize = {GRID_COLUMNS * TILE_SIZE, GRID_ROWS * TILE_SIZE};
-static Texture2D wallTextures[1];
+static Texture2D wallTextures[2];
 
 
 void LoadTextures(){
 	wallTextures[0] = LoadTexture("assets/brick256.png");
+	wallTextures[1] = LoadTexture("assets/ola.png");
 }
 
 Vector2 getGridPosition(Vector2 _windowPosition){
@@ -91,7 +92,6 @@ int main() {
 						Rectangle sourc = {scr.xCell[w]*wallTextures[0].width,0,1,wallTextures[0].height};						
 						Rectangle dest  = {w,startColumn, 1, (endColumn - startColumn)};						
 						DrawTexturePro(wallTextures[0],sourc, dest, (Vector2) {0}, 0.00f,GetColor(scr.colors[w]));						
-
 						//double step = (double)(wallTextures[0].height / scr.lines[w]);
 					
 					}

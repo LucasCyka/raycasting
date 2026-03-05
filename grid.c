@@ -182,6 +182,9 @@ ScreenBuffer CastToBuffer(){
 			
 			if(hitSide == 0) buff.xCell[x] = (double)(rays[x].y - floor(rays[x].y)); 
 			else 			 buff.xCell[x] = (double)(rays[x].x - floor(rays[x].x));
+			
+			if(hitSide == 0 && rayDir.x < 0) buff.xCell[x] *= -1;
+			if(hitSide == 1 && rayDir.y > 0) buff.xCell[x] *= -1;
 
 		}
 	}	
