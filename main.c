@@ -17,7 +17,7 @@ static Texture2D wallTextures[1];
 
 
 void LoadTextures(){
-	wallTextures[0] = LoadTexture("assets/brick.png");
+	wallTextures[0] = LoadTexture("assets/brick256.png");
 }
 
 Vector2 getGridPosition(Vector2 _windowPosition){
@@ -81,10 +81,12 @@ int main() {
 					if(scr.lines[w] == 0) continue;
 						int startColumn = WINDOW_HEIGHT / 2 - scr.lines[w]/2; 
 						int endColumn   = WINDOW_HEIGHT / 2 + scr.lines[w]/2;
-				
-						if (startColumn < 0) startColumn = 0;
-						if (endColumn   > WINDOW_HEIGHT) endColumn = WINDOW_HEIGHT;				
-
+						
+						//TODO: better way to clamp. Can save memory and improve performance.
+						//if (startColumn < 0) startColumn = 0;
+						//if (endColumn   > WINDOW_HEIGHT) endColumn = WINDOW_HEIGHT;				
+						//double yText = WINDOW_HEIGHT / 2 - scr.lines[w]/2;
+						//yText = (yText < 0) ? fabs(yText);
 						//DrawLine(w, startColumn, w, endColumn, GetColor(scr.colors[w]));
 						Rectangle sourc = {scr.xCell[w]*wallTextures[0].width,0,1,wallTextures[0].height};						
 						Rectangle dest  = {w,startColumn, 1, (endColumn - startColumn)};						
