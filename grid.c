@@ -178,7 +178,8 @@ ScreenBuffer CastToBuffer(){
 			int lineHeight  = ScreenHeight / distanceToPlane;
 			buff.lines[x]   = lineHeight;
 			buff.colors[x]  = 0xFF0000FF;
-			if(hitSide == 0) buff.colors[x] -= 0xAA;
+			if(hitSide == 1) buff.colors[x] -= 0xAA;
+			
 		}
 	}	
 

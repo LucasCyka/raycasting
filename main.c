@@ -13,6 +13,12 @@
 RenderTexture2D frameBufferRender;
 static float boardScale = 1.0f;
 static Vector2 gridSize = {GRID_COLUMNS * TILE_SIZE, GRID_ROWS * TILE_SIZE};
+static Texture2D wallTextures[1];
+
+
+void LoadTextures(){
+	wallTextures[0] = LoadTexture("assets/brick.png");
+}
 
 Vector2 getGridPosition(Vector2 _windowPosition){
 	Vector2 worldMousePos;
@@ -38,6 +44,7 @@ int main() {
 	//SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "raycasting");
 	SetTargetFPS(60);
+	LoadTextures();
 
 	InitBoard(GRID_COLUMNS, GRID_ROWS,WINDOW_WIDTH,WINDOW_HEIGHT);
 	SetCasterPosition((Vector2) {GRID_COLUMNS / 2.0, GRID_ROWS / 2.0});
