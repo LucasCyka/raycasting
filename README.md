@@ -1,1 +1,2 @@
-My raycasting fps in c yayyyy
+Simple raycasting engine implemented with Raylib.
+
