@@ -12,7 +12,7 @@
 typedef struct ScreenBuffer{
 	int *lines;
 	unsigned int *colors;
-	unsigned char xCell;
+	double *xCell;
 	
 } ScreenBuffer;
 

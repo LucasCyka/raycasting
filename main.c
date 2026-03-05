@@ -76,17 +76,22 @@ int main() {
 		
 		BeginDrawing();
 			ClearBackground(BLACK);
-			
 			if(!drawMap){
 				for(int w = 0; w < WINDOW_WIDTH; w++){
 					if(scr.lines[w] == 0) continue;
-						int startColumn = -scr.lines[w] / 2 + WINDOW_HEIGHT / 2;
-						int endColumn   = scr.lines[w] / 2 + WINDOW_HEIGHT / 2;
+						int startColumn = WINDOW_HEIGHT / 2 - scr.lines[w]/2; 
+						int endColumn   = WINDOW_HEIGHT / 2 + scr.lines[w]/2;
 				
 						if (startColumn < 0) startColumn = 0;
 						if (endColumn   > WINDOW_HEIGHT) endColumn = WINDOW_HEIGHT;				
 
-						DrawLine(w, startColumn, w, endColumn, GetColor(scr.colors[w]));
+						//DrawLine(w, startColumn, w, endColumn, GetColor(scr.colors[w]));
+						Rectangle sourc = {scr.xCell[w]*wallTextures[0].width,0,1,wallTextures[0].height};						
+						Rectangle dest  = {w,startColumn, 1, (endColumn - startColumn)};						
+						DrawTexturePro(wallTextures[0],sourc, dest, (Vector2) {0}, 0.00f,GetColor(scr.colors[w]));						
+
+						//double step = (double)(wallTextures[0].height / scr.lines[w]);
+					
 					}
 			}
 

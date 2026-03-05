@@ -33,7 +33,7 @@ void InitBoard(int width, int height, int screenWidth, int screenHeight){
 	
 	buff.lines  = (int*) malloc(screenWidth * sizeof(int));	
 	buff.colors = (int*) malloc(screenWidth * sizeof(int));		
-
+	buff.xCell  = (double*) malloc(screenWidth * sizeof(double));		
 	//screenBuffer = (int*) malloc(screenWidth * sizeof(int));	
 	rays         = (Vector2*) malloc(screenWidth * sizeof(Vector2));
 }
@@ -177,9 +177,12 @@ ScreenBuffer CastToBuffer(){
 			
 			int lineHeight  = ScreenHeight / distanceToPlane;
 			buff.lines[x]   = lineHeight;
-			buff.colors[x]  = 0xFF0000FF;
+			buff.colors[x]  = 0xFFFFFFFF;
 			if(hitSide == 1) buff.colors[x] -= 0xAA;
 			
+			if(hitSide == 0) buff.xCell[x] = (double)(rays[x].y - floor(rays[x].y)); 
+			else 			 buff.xCell[x] = (double)(rays[x].x - floor(rays[x].x));
+
 		}
 	}	
 
