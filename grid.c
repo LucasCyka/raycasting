@@ -83,8 +83,24 @@ void MoveCaster(Vector2 dir,float speed, float angularSpeed){
 	}
 	
 	if(dir.y < -0.1f) {
-		casterPos.y += casterDir.y * speed * dt;
-		casterPos.x += casterDir.x * speed * dt;
+		int newX = casterPos.x + casterDir.x * speed * dt  * 3;
+		int newY = casterPos.y + casterDir.y * speed * dt  * 3;
+		
+		if(pcells[newY * BoardWidth + newX] != 0){
+			Vector2 wallNormal = {-1,0};
+
+			Vector2 newDir = Vector2Subtract(casterDir, Vector2Scale(wallNormal, Vector2DotProduct(casterDir, wallNormal)));
+			
+			casterPos.x += newDir.x * speed * dt;
+			casterPos.y += newDir.y * speed * dt;			
+
+		}else{
+			casterPos.x += casterDir.x * speed * dt;
+			casterPos.y += casterDir.y * speed * dt;
+		}		
+
+		//casterPos.x += casterDir.x * speed * dt;
+
 	}else if(dir.y >0.1f){
 		casterPos.y += -casterDir.y * speed * dt;
 		casterPos.x += -casterDir.x * speed * dt;
@@ -154,7 +170,7 @@ ScreenBuffer CastToBuffer(){
 				hitSide = 1;
 			}
 			int id = (int)(casterMapY * BoardWidth + casterMapX);
-			if(casterMapX >=0 && casterMapX <= BoardWidth && casterMapY >= 0 && casterMapY <= BoardHeight  ){
+			if(casterMapX >=0 && casterMapX <= BoardWidth-1 && casterMapY >= 0 && casterMapY <= BoardHeight-1  ){
 				if(pcells[id] == 1){
 					found = true;
 				}
