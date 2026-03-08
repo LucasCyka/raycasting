@@ -83,13 +83,29 @@ void MoveCaster(Vector2 dir,float speed, float angularSpeed){
 	}
 	
 	if(dir.y < -0.1f) {
+		int oldX = (int)(casterPos.x);
+		int oldY = (int)(casterPos.y);
 		int newX = casterPos.x + casterDir.x * speed * dt  * 3;
 		int newY = casterPos.y + casterDir.y * speed * dt  * 3;
-		
-		if(pcells[newY * BoardWidth + newX] != 0){
-			Vector2 wallNormal = {-1,0};
+		bool collided = false;
+		Vector2 newDir = {0.00f};
+		Vector2 wallNormal = {0.00f};
 
-			Vector2 newDir = Vector2Subtract(casterDir, Vector2Scale(wallNormal, Vector2DotProduct(casterDir, wallNormal)));
+		if(pcells[oldY * BoardWidth + newX] != 0){
+			collided = true;
+			wallNormal.x = oldX - newX;
+			
+			newDir = Vector2Subtract(casterDir, Vector2Scale(wallNormal, Vector2DotProduct(casterDir, wallNormal)));
+		}
+		if(pcells[(int)(newY) * BoardWidth + oldX] != 0){
+			collided = true;
+			wallNormal.y = oldY - newY;
+			newDir = Vector2Subtract(casterDir, Vector2Scale(wallNormal, Vector2DotProduct(casterDir, wallNormal)));
+		}			
+		
+		if(Vector2DotProduct(casterDir,newDir) <0 ) newDir = (Vector2) {0.000f};
+
+		if(collided){
 			
 			casterPos.x += newDir.x * speed * dt;
 			casterPos.y += newDir.y * speed * dt;			
