@@ -102,18 +102,20 @@ void MoveCaster(Vector2 dir,float speed, float angularSpeed){
 	}else return;
 	
 	if(newX < 0 || newX > BoardWidth -1 || newY < 0 || newY > BoardHeight -1) exitedGrid = true;		
-	Vector2 cDir = (backwards) ? (Vector2){-casterDir.x,-casterDir.y} : casterDir; 
+	Vector2 cDir = (backwards) ? (Vector2){-casterDir.x,-casterDir.y} : casterDir;
+	newDir = cDir;
 	if(pcells[oldY * BoardWidth + newX] != 0 && !exitedGrid){
 		collided = true;
-		wallNormal.x = oldX - newX;
-			
-		newDir = Vector2Subtract(cDir, Vector2Scale(wallNormal, Vector2DotProduct(cDir, wallNormal)));
+		newDir.x = 0.00f;
+		//no need for that complex collision. I was thinking about walls not perpendicular to the lines and columns
+		//	wallNormal.x = oldX - newX;
+		//newDir = Vector2Subtract(cDir, Vector2Scale(wallNormal, Vector2DotProduct(cDir, wallNormal)));
 	}
 	if(pcells[(int)(newY) * BoardWidth + oldX] != 0 && !exitedGrid){
 		collided = true;
-		wallNormal.y = oldY - newY;
-
-		newDir = Vector2Subtract(cDir, Vector2Scale(wallNormal, Vector2DotProduct(cDir, wallNormal)));
+		newDir.y = 0.00f;
+		//wallNormal.y = oldY - newY;
+		//newDir = Vector2Subtract(cDir, Vector2Scale(wallNormal, Vector2DotProduct(cDir, wallNormal)));
 	}			
 		
 	if(Vector2DotProduct(cDir,newDir) <0 ) newDir = (Vector2) {0.000f};
