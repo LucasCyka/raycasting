@@ -82,28 +82,41 @@ void MoveCaster(Vector2 dir,float speed, float angularSpeed){
 		cameraPlane.y = cdir.x*sinf(PI/180.0f*-angularSpeed) + cdir.y*cosf(PI/180.0f*-angularSpeed);
 	}
 	
+	int oldX = (int)(casterPos.x);
+	int oldY = (int)(casterPos.y);
+	int newX;
+	int newY;
+	bool collided    = false;
+	bool backwards   = false;
+	bool exitedGrid  = false;
+	Vector2 newDir = {0.00f};
+	Vector2 wallNormal = {0.00f};
+	
 	if(dir.y < -0.1f) {
-		int oldX = (int)(casterPos.x);
-		int oldY = (int)(casterPos.y);
-		int newX = casterPos.x + casterDir.x * speed * dt  * 3;
-		int newY = casterPos.y + casterDir.y * speed * dt  * 3;
-		bool collided = false;
-		Vector2 newDir = {0.00f};
-		Vector2 wallNormal = {0.00f};
-
-		if(pcells[oldY * BoardWidth + newX] != 0){
-			collided = true;
-			wallNormal.x = oldX - newX;
+		newX = casterPos.x + casterDir.x * speed * dt  * 3;
+		newY = casterPos.y + casterDir.y * speed * dt  * 3;
+	}else if(dir.y > 0.1f){
+		backwards = true;
+		newX = casterPos.x + -casterDir.x * speed * dt  * 3;
+		newY = casterPos.y + -casterDir.y * speed * dt  * 3;
+	}else return;
+	
+	if(newX < 0 || newX > BoardWidth -1 || newY < 0 || newY > BoardHeight -1) exitedGrid = true;		
+	Vector2 cDir = (backwards) ? (Vector2){-casterDir.x,-casterDir.y} : casterDir; 
+	if(pcells[oldY * BoardWidth + newX] != 0 && !exitedGrid){
+		collided = true;
+		wallNormal.x = oldX - newX;
 			
-			newDir = Vector2Subtract(casterDir, Vector2Scale(wallNormal, Vector2DotProduct(casterDir, wallNormal)));
-		}
-		if(pcells[(int)(newY) * BoardWidth + oldX] != 0){
-			collided = true;
-			wallNormal.y = oldY - newY;
-			newDir = Vector2Subtract(casterDir, Vector2Scale(wallNormal, Vector2DotProduct(casterDir, wallNormal)));
-		}			
+		newDir = Vector2Subtract(cDir, Vector2Scale(wallNormal, Vector2DotProduct(cDir, wallNormal)));
+	}
+	if(pcells[(int)(newY) * BoardWidth + oldX] != 0 && !exitedGrid){
+		collided = true;
+		wallNormal.y = oldY - newY;
+
+		newDir = Vector2Subtract(cDir, Vector2Scale(wallNormal, Vector2DotProduct(cDir, wallNormal)));
+	}			
 		
-		if(Vector2DotProduct(casterDir,newDir) <0 ) newDir = (Vector2) {0.000f};
+	if(Vector2DotProduct(cDir,newDir) <0 ) newDir = (Vector2) {0.000f};
 
 		if(collided){
 			
@@ -111,17 +124,10 @@ void MoveCaster(Vector2 dir,float speed, float angularSpeed){
 			casterPos.y += newDir.y * speed * dt;			
 
 		}else{
-			casterPos.x += casterDir.x * speed * dt;
-			casterPos.y += casterDir.y * speed * dt;
+			casterPos.x += cDir.x * speed * dt;
+			casterPos.y += cDir.y * speed * dt;
 		}		
 
-		//casterPos.x += casterDir.x * speed * dt;
-
-	}else if(dir.y >0.1f){
-		casterPos.y += -casterDir.y * speed * dt;
-		casterPos.x += -casterDir.x * speed * dt;
-	}else if(dir.y >0.1f){
-	}
 
 }
 
