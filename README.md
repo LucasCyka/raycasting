@@ -11,3 +11,5 @@ Simple raycasting engine implemented with Raylib for rendering.
 	* Custom resolutions
 	* More textures
 	* Map Editor
+
+![til](./showcase.gif)
