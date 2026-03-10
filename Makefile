@@ -1,12 +1,17 @@
+obj := bin/main.o bin/grid.o bin/main
+CFLAGS := -std=c99 -Wall
+LFLAGS := -Wl,-Bstatic -lraylib -Wl,-Bdynamic -lX11 -lm -lGL
 
-bin/main: bin/main.o bin/grid.o
-	cc -o bin/main bin/main.o bin/grid.o -std=c99 -Wl,-Bstatic -lraylib -Wl,-Bdynamic -lX11 -lm -lGL && bin/./main
-
+bin/main: bin/main.o bin/grid.o 
+	cc -o $@ $^ $(CFLAGS) $(LFLAGS) && bin/./main
+	
 bin/grid.o: grid.c
-	cc -c grid.c -o bin/grid.o -std=c99
+	cc -c grid.c -o bin/grid.o $(CFLAGS)
 
 bin/main.o: main.c
-	cc -c main.c -o bin/main.o -std=c99
+	cc -c main.c -o bin/main.o $(CFLAGS)
 clean:
-	rm -f bin/main bin/main.o bin/grid.o && make
+	rm -f $(obj) && make
+
+
 
